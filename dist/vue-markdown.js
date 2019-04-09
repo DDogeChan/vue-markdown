@@ -143,6 +143,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _markdownItTaskLists2 = _interopRequireDefault(_markdownItTaskLists);
 
+	var _twemoji = __webpack_require__(178);
+
+	var _twemoji2 = _interopRequireDefault(_twemoji);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
@@ -316,6 +320,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	      return defaultLinkRenderer(tokens, idx, options, env, self);
 	    };
+	    this.md.renderer.rules.emoji = function (token, idx) {
+	      return _twemoji2.default.parse(token[idx].content);
+	    };
 
 	    if (this.toc) {
 	      this.md.use(_markdownItTocAndAnchor2.default, {
@@ -407,53 +414,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(50);
 	module.exports = __webpack_require__(52);
 
+
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(5);
-	var global        = __webpack_require__(16)
-	  , hide          = __webpack_require__(20)
-	  , Iterators     = __webpack_require__(8)
-	  , TO_STRING_TAG = __webpack_require__(47)('toStringTag');
+	var global = __webpack_require__(16);
+	var hide = __webpack_require__(20);
+	var Iterators = __webpack_require__(8);
+	var TO_STRING_TAG = __webpack_require__(47)('toStringTag');
 
-	for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
-	  var NAME       = collections[i]
-	    , Collection = global[NAME]
-	    , proto      = Collection && Collection.prototype;
-	  if(proto && !proto[TO_STRING_TAG])hide(proto, TO_STRING_TAG, NAME);
+	var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
+	  'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
+	  'MediaList,MimeTypeArray,NamedNodeMap,NodeList,PaintRequestList,Plugin,PluginArray,SVGLengthList,SVGNumberList,' +
+	  'SVGPathSegList,SVGPointList,SVGStringList,SVGTransformList,SourceBufferList,StyleSheetList,TextTrackCueList,' +
+	  'TextTrackList,TouchList').split(',');
+
+	for (var i = 0; i < DOMIterables.length; i++) {
+	  var NAME = DOMIterables[i];
+	  var Collection = global[NAME];
+	  var proto = Collection && Collection.prototype;
+	  if (proto && !proto[TO_STRING_TAG]) hide(proto, TO_STRING_TAG, NAME);
 	  Iterators[NAME] = Iterators.Array;
 	}
+
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var addToUnscopables = __webpack_require__(6)
-	  , step             = __webpack_require__(7)
-	  , Iterators        = __webpack_require__(8)
-	  , toIObject        = __webpack_require__(9);
+	var addToUnscopables = __webpack_require__(6);
+	var step = __webpack_require__(7);
+	var Iterators = __webpack_require__(8);
+	var toIObject = __webpack_require__(9);
 
 	// 22.1.3.4 Array.prototype.entries()
 	// 22.1.3.13 Array.prototype.keys()
 	// 22.1.3.29 Array.prototype.values()
 	// 22.1.3.30 Array.prototype[@@iterator]()
-	module.exports = __webpack_require__(13)(Array, 'Array', function(iterated, kind){
+	module.exports = __webpack_require__(13)(Array, 'Array', function (iterated, kind) {
 	  this._t = toIObject(iterated); // target
 	  this._i = 0;                   // next index
 	  this._k = kind;                // kind
 	// 22.1.5.2.1 %ArrayIteratorPrototype%.next()
-	}, function(){
-	  var O     = this._t
-	    , kind  = this._k
-	    , index = this._i++;
-	  if(!O || index >= O.length){
+	}, function () {
+	  var O = this._t;
+	  var kind = this._k;
+	  var index = this._i++;
+	  if (!O || index >= O.length) {
 	    this._t = undefined;
 	    return step(1);
 	  }
-	  if(kind == 'keys'  )return step(0, index);
-	  if(kind == 'values')return step(0, O[index]);
+	  if (kind == 'keys') return step(0, index);
+	  if (kind == 'values') return step(0, O[index]);
 	  return step(0, [index, O[index]]);
 	}, 'values');
 
@@ -464,19 +479,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	addToUnscopables('values');
 	addToUnscopables('entries');
 
+
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-	module.exports = function(){ /* empty */ };
+	module.exports = function () { /* empty */ };
+
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
-	module.exports = function(done, value){
-	  return {value: value, done: !!done};
+	module.exports = function (done, value) {
+	  return { value: value, done: !!done };
 	};
+
 
 /***/ }),
 /* 8 */
@@ -484,16 +502,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = {};
 
+
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// to indexed object, toObject with fallback for non-array-like ES3 strings
-	var IObject = __webpack_require__(10)
-	  , defined = __webpack_require__(12);
-	module.exports = function(it){
+	var IObject = __webpack_require__(10);
+	var defined = __webpack_require__(12);
+	module.exports = function (it) {
 	  return IObject(defined(it));
 	};
+
 
 /***/ }),
 /* 10 */
@@ -501,9 +521,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
 	var cof = __webpack_require__(11);
-	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
+	// eslint-disable-next-line no-prototype-builtins
+	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
+
 
 /***/ }),
 /* 11 */
@@ -511,94 +533,96 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var toString = {}.toString;
 
-	module.exports = function(it){
+	module.exports = function (it) {
 	  return toString.call(it).slice(8, -1);
 	};
+
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports) {
 
 	// 7.2.1 RequireObjectCoercible(argument)
-	module.exports = function(it){
-	  if(it == undefined)throw TypeError("Can't call method on  " + it);
+	module.exports = function (it) {
+	  if (it == undefined) throw TypeError("Can't call method on  " + it);
 	  return it;
 	};
+
 
 /***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var LIBRARY        = __webpack_require__(14)
-	  , $export        = __webpack_require__(15)
-	  , redefine       = __webpack_require__(30)
-	  , hide           = __webpack_require__(20)
-	  , has            = __webpack_require__(31)
-	  , Iterators      = __webpack_require__(8)
-	  , $iterCreate    = __webpack_require__(32)
-	  , setToStringTag = __webpack_require__(46)
-	  , getPrototypeOf = __webpack_require__(48)
-	  , ITERATOR       = __webpack_require__(47)('iterator')
-	  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
-	  , FF_ITERATOR    = '@@iterator'
-	  , KEYS           = 'keys'
-	  , VALUES         = 'values';
+	var LIBRARY = __webpack_require__(14);
+	var $export = __webpack_require__(15);
+	var redefine = __webpack_require__(31);
+	var hide = __webpack_require__(20);
+	var Iterators = __webpack_require__(8);
+	var $iterCreate = __webpack_require__(32);
+	var setToStringTag = __webpack_require__(46);
+	var getPrototypeOf = __webpack_require__(48);
+	var ITERATOR = __webpack_require__(47)('iterator');
+	var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
+	var FF_ITERATOR = '@@iterator';
+	var KEYS = 'keys';
+	var VALUES = 'values';
 
-	var returnThis = function(){ return this; };
+	var returnThis = function () { return this; };
 
-	module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
+	module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
 	  $iterCreate(Constructor, NAME, next);
-	  var getMethod = function(kind){
-	    if(!BUGGY && kind in proto)return proto[kind];
-	    switch(kind){
-	      case KEYS: return function keys(){ return new Constructor(this, kind); };
-	      case VALUES: return function values(){ return new Constructor(this, kind); };
-	    } return function entries(){ return new Constructor(this, kind); };
+	  var getMethod = function (kind) {
+	    if (!BUGGY && kind in proto) return proto[kind];
+	    switch (kind) {
+	      case KEYS: return function keys() { return new Constructor(this, kind); };
+	      case VALUES: return function values() { return new Constructor(this, kind); };
+	    } return function entries() { return new Constructor(this, kind); };
 	  };
-	  var TAG        = NAME + ' Iterator'
-	    , DEF_VALUES = DEFAULT == VALUES
-	    , VALUES_BUG = false
-	    , proto      = Base.prototype
-	    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
-	    , $default   = $native || getMethod(DEFAULT)
-	    , $entries   = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined
-	    , $anyNative = NAME == 'Array' ? proto.entries || $native : $native
-	    , methods, key, IteratorPrototype;
+	  var TAG = NAME + ' Iterator';
+	  var DEF_VALUES = DEFAULT == VALUES;
+	  var VALUES_BUG = false;
+	  var proto = Base.prototype;
+	  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
+	  var $default = $native || getMethod(DEFAULT);
+	  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
+	  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
+	  var methods, key, IteratorPrototype;
 	  // Fix native
-	  if($anyNative){
-	    IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
-	    if(IteratorPrototype !== Object.prototype){
+	  if ($anyNative) {
+	    IteratorPrototype = getPrototypeOf($anyNative.call(new Base()));
+	    if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
 	      // Set @@toStringTag to native iterators
 	      setToStringTag(IteratorPrototype, TAG, true);
 	      // fix for some old engines
-	      if(!LIBRARY && !has(IteratorPrototype, ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
+	      if (!LIBRARY && typeof IteratorPrototype[ITERATOR] != 'function') hide(IteratorPrototype, ITERATOR, returnThis);
 	    }
 	  }
 	  // fix Array#{values, @@iterator}.name in V8 / FF
-	  if(DEF_VALUES && $native && $native.name !== VALUES){
+	  if (DEF_VALUES && $native && $native.name !== VALUES) {
 	    VALUES_BUG = true;
-	    $default = function values(){ return $native.call(this); };
+	    $default = function values() { return $native.call(this); };
 	  }
 	  // Define iterator
-	  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
+	  if ((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
 	    hide(proto, ITERATOR, $default);
 	  }
 	  // Plug for library
 	  Iterators[NAME] = $default;
-	  Iterators[TAG]  = returnThis;
-	  if(DEFAULT){
+	  Iterators[TAG] = returnThis;
+	  if (DEFAULT) {
 	    methods = {
-	      values:  DEF_VALUES ? $default : getMethod(VALUES),
-	      keys:    IS_SET     ? $default : getMethod(KEYS),
+	      values: DEF_VALUES ? $default : getMethod(VALUES),
+	      keys: IS_SET ? $default : getMethod(KEYS),
 	      entries: $entries
 	    };
-	    if(FORCED)for(key in methods){
-	      if(!(key in proto))redefine(proto, key, methods[key]);
+	    if (FORCED) for (key in methods) {
+	      if (!(key in proto)) redefine(proto, key, methods[key]);
 	    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
 	  }
 	  return methods;
 	};
+
 
 /***/ }),
 /* 14 */
@@ -606,32 +630,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = true;
 
+
 /***/ }),
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var global    = __webpack_require__(16)
-	  , core      = __webpack_require__(17)
-	  , ctx       = __webpack_require__(18)
-	  , hide      = __webpack_require__(20)
-	  , PROTOTYPE = 'prototype';
+	var global = __webpack_require__(16);
+	var core = __webpack_require__(17);
+	var ctx = __webpack_require__(18);
+	var hide = __webpack_require__(20);
+	var has = __webpack_require__(30);
+	var PROTOTYPE = 'prototype';
 
-	var $export = function(type, name, source){
-	  var IS_FORCED = type & $export.F
-	    , IS_GLOBAL = type & $export.G
-	    , IS_STATIC = type & $export.S
-	    , IS_PROTO  = type & $export.P
-	    , IS_BIND   = type & $export.B
-	    , IS_WRAP   = type & $export.W
-	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-	    , expProto  = exports[PROTOTYPE]
-	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
-	    , key, own, out;
-	  if(IS_GLOBAL)source = name;
-	  for(key in source){
+	var $export = function (type, name, source) {
+	  var IS_FORCED = type & $export.F;
+	  var IS_GLOBAL = type & $export.G;
+	  var IS_STATIC = type & $export.S;
+	  var IS_PROTO = type & $export.P;
+	  var IS_BIND = type & $export.B;
+	  var IS_WRAP = type & $export.W;
+	  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+	  var expProto = exports[PROTOTYPE];
+	  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
+	  var key, own, out;
+	  if (IS_GLOBAL) source = name;
+	  for (key in source) {
 	    // contains in native
 	    own = !IS_FORCED && target && target[key] !== undefined;
-	    if(own && key in exports)continue;
+	    if (own && has(exports, key)) continue;
 	    // export native or passed
 	    out = own ? target[key] : source[key];
 	    // prevent global pollution for namespaces
@@ -639,11 +665,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // bind timers to global for call from export context
 	    : IS_BIND && own ? ctx(out, global)
 	    // wrap global constructors for prevent change them in library
-	    : IS_WRAP && target[key] == out ? (function(C){
-	      var F = function(a, b, c){
-	        if(this instanceof C){
-	          switch(arguments.length){
-	            case 0: return new C;
+	    : IS_WRAP && target[key] == out ? (function (C) {
+	      var F = function (a, b, c) {
+	        if (this instanceof C) {
+	          switch (arguments.length) {
+	            case 0: return new C();
 	            case 1: return new C(a);
 	            case 2: return new C(a, b);
 	          } return new C(a, b, c);
@@ -654,10 +680,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // make static versions for prototype methods
 	    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
 	    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
-	    if(IS_PROTO){
+	    if (IS_PROTO) {
 	      (exports.virtual || (exports.virtual = {}))[key] = out;
 	      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
-	      if(type & $export.R && expProto && !expProto[key])hide(expProto, key, out);
+	      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
 	    }
 	  }
 	};
@@ -669,8 +695,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	$export.B = 16;  // bind
 	$export.W = 32;  // wrap
 	$export.U = 64;  // safe
-	$export.R = 128; // real proto method for `library` 
+	$export.R = 128; // real proto method for `library`
 	module.exports = $export;
+
 
 /***/ }),
 /* 16 */
@@ -678,15 +705,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 	var global = module.exports = typeof window != 'undefined' && window.Math == Math
-	  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+	  ? window : typeof self != 'undefined' && self.Math == Math ? self
+	  // eslint-disable-next-line no-new-func
+	  : Function('return this')();
+	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
 
 /***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-	var core = module.exports = {version: '2.4.0'};
-	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+	var core = module.exports = { version: '2.6.5' };
+	if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
 
 /***/ }),
 /* 18 */
@@ -694,126 +725,136 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// optional / simple context binding
 	var aFunction = __webpack_require__(19);
-	module.exports = function(fn, that, length){
+	module.exports = function (fn, that, length) {
 	  aFunction(fn);
-	  if(that === undefined)return fn;
-	  switch(length){
-	    case 1: return function(a){
+	  if (that === undefined) return fn;
+	  switch (length) {
+	    case 1: return function (a) {
 	      return fn.call(that, a);
 	    };
-	    case 2: return function(a, b){
+	    case 2: return function (a, b) {
 	      return fn.call(that, a, b);
 	    };
-	    case 3: return function(a, b, c){
+	    case 3: return function (a, b, c) {
 	      return fn.call(that, a, b, c);
 	    };
 	  }
-	  return function(/* ...args */){
+	  return function (/* ...args */) {
 	    return fn.apply(that, arguments);
 	  };
 	};
+
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
-	module.exports = function(it){
-	  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+	module.exports = function (it) {
+	  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
 	  return it;
 	};
+
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var dP         = __webpack_require__(21)
-	  , createDesc = __webpack_require__(29);
-	module.exports = __webpack_require__(25) ? function(object, key, value){
+	var dP = __webpack_require__(21);
+	var createDesc = __webpack_require__(29);
+	module.exports = __webpack_require__(25) ? function (object, key, value) {
 	  return dP.f(object, key, createDesc(1, value));
-	} : function(object, key, value){
+	} : function (object, key, value) {
 	  object[key] = value;
 	  return object;
 	};
+
 
 /***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var anObject       = __webpack_require__(22)
-	  , IE8_DOM_DEFINE = __webpack_require__(24)
-	  , toPrimitive    = __webpack_require__(28)
-	  , dP             = Object.defineProperty;
+	var anObject = __webpack_require__(22);
+	var IE8_DOM_DEFINE = __webpack_require__(24);
+	var toPrimitive = __webpack_require__(28);
+	var dP = Object.defineProperty;
 
-	exports.f = __webpack_require__(25) ? Object.defineProperty : function defineProperty(O, P, Attributes){
+	exports.f = __webpack_require__(25) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
 	  anObject(O);
 	  P = toPrimitive(P, true);
 	  anObject(Attributes);
-	  if(IE8_DOM_DEFINE)try {
+	  if (IE8_DOM_DEFINE) try {
 	    return dP(O, P, Attributes);
-	  } catch(e){ /* empty */ }
-	  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
-	  if('value' in Attributes)O[P] = Attributes.value;
+	  } catch (e) { /* empty */ }
+	  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+	  if ('value' in Attributes) O[P] = Attributes.value;
 	  return O;
 	};
+
 
 /***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(23);
-	module.exports = function(it){
-	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	module.exports = function (it) {
+	  if (!isObject(it)) throw TypeError(it + ' is not an object!');
 	  return it;
 	};
+
 
 /***/ }),
 /* 23 */
 /***/ (function(module, exports) {
 
-	module.exports = function(it){
+	module.exports = function (it) {
 	  return typeof it === 'object' ? it !== null : typeof it === 'function';
 	};
+
 
 /***/ }),
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = !__webpack_require__(25) && !__webpack_require__(26)(function(){
-	  return Object.defineProperty(__webpack_require__(27)('div'), 'a', {get: function(){ return 7; }}).a != 7;
+	module.exports = !__webpack_require__(25) && !__webpack_require__(26)(function () {
+	  return Object.defineProperty(__webpack_require__(27)('div'), 'a', { get: function () { return 7; } }).a != 7;
 	});
+
 
 /***/ }),
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// Thank's IE8 for his funny defineProperty
-	module.exports = !__webpack_require__(26)(function(){
-	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	module.exports = !__webpack_require__(26)(function () {
+	  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
 	});
+
 
 /***/ }),
 /* 26 */
 /***/ (function(module, exports) {
 
-	module.exports = function(exec){
+	module.exports = function (exec) {
 	  try {
 	    return !!exec();
-	  } catch(e){
+	  } catch (e) {
 	    return true;
 	  }
 	};
+
 
 /***/ }),
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(23)
-	  , document = __webpack_require__(16).document
-	  // in old IE typeof document.createElement is 'object'
-	  , is = isObject(document) && isObject(document.createElement);
-	module.exports = function(it){
+	var isObject = __webpack_require__(23);
+	var document = __webpack_require__(16).document;
+	// typeof document.createElement is 'object' in old IE
+	var is = isObject(document) && isObject(document.createElement);
+	module.exports = function (it) {
 	  return is ? document.createElement(it) : {};
 	};
+
 
 /***/ }),
 /* 28 */
@@ -823,81 +864,86 @@ return /******/ (function(modules) { // webpackBootstrap
 	var isObject = __webpack_require__(23);
 	// instead of the ES6 spec version, we didn't implement @@toPrimitive case
 	// and the second argument - flag - preferred type is a string
-	module.exports = function(it, S){
-	  if(!isObject(it))return it;
+	module.exports = function (it, S) {
+	  if (!isObject(it)) return it;
 	  var fn, val;
-	  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
-	  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
-	  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+	  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+	  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
+	  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
 	  throw TypeError("Can't convert object to primitive value");
 	};
+
 
 /***/ }),
 /* 29 */
 /***/ (function(module, exports) {
 
-	module.exports = function(bitmap, value){
+	module.exports = function (bitmap, value) {
 	  return {
-	    enumerable  : !(bitmap & 1),
+	    enumerable: !(bitmap & 1),
 	    configurable: !(bitmap & 2),
-	    writable    : !(bitmap & 4),
-	    value       : value
+	    writable: !(bitmap & 4),
+	    value: value
 	  };
 	};
 
+
 /***/ }),
 /* 30 */
+/***/ (function(module, exports) {
+
+	var hasOwnProperty = {}.hasOwnProperty;
+	module.exports = function (it, key) {
+	  return hasOwnProperty.call(it, key);
+	};
+
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(20);
 
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-	var hasOwnProperty = {}.hasOwnProperty;
-	module.exports = function(it, key){
-	  return hasOwnProperty.call(it, key);
-	};
 
 /***/ }),
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var create         = __webpack_require__(33)
-	  , descriptor     = __webpack_require__(29)
-	  , setToStringTag = __webpack_require__(46)
-	  , IteratorPrototype = {};
+	var create = __webpack_require__(33);
+	var descriptor = __webpack_require__(29);
+	var setToStringTag = __webpack_require__(46);
+	var IteratorPrototype = {};
 
 	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-	__webpack_require__(20)(IteratorPrototype, __webpack_require__(47)('iterator'), function(){ return this; });
+	__webpack_require__(20)(IteratorPrototype, __webpack_require__(47)('iterator'), function () { return this; });
 
-	module.exports = function(Constructor, NAME, next){
-	  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
+	module.exports = function (Constructor, NAME, next) {
+	  Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
 	  setToStringTag(Constructor, NAME + ' Iterator');
 	};
+
 
 /***/ }),
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-	var anObject    = __webpack_require__(22)
-	  , dPs         = __webpack_require__(34)
-	  , enumBugKeys = __webpack_require__(44)
-	  , IE_PROTO    = __webpack_require__(41)('IE_PROTO')
-	  , Empty       = function(){ /* empty */ }
-	  , PROTOTYPE   = 'prototype';
+	var anObject = __webpack_require__(22);
+	var dPs = __webpack_require__(34);
+	var enumBugKeys = __webpack_require__(44);
+	var IE_PROTO = __webpack_require__(41)('IE_PROTO');
+	var Empty = function () { /* empty */ };
+	var PROTOTYPE = 'prototype';
 
 	// Create object with fake `null` prototype: use iframe Object with cleared prototype
-	var createDict = function(){
+	var createDict = function () {
 	  // Thrash, waste and sodomy: IE GC bug
-	  var iframe = __webpack_require__(27)('iframe')
-	    , i      = enumBugKeys.length
-	    , lt     = '<'
-	    , gt     = '>'
-	    , iframeDocument;
+	  var iframe = __webpack_require__(27)('iframe');
+	  var i = enumBugKeys.length;
+	  var lt = '<';
+	  var gt = '>';
+	  var iframeDocument;
 	  iframe.style.display = 'none';
 	  __webpack_require__(45).appendChild(iframe);
 	  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
@@ -908,15 +954,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
 	  iframeDocument.close();
 	  createDict = iframeDocument.F;
-	  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
+	  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
 	  return createDict();
 	};
 
-	module.exports = Object.create || function create(O, Properties){
+	module.exports = Object.create || function create(O, Properties) {
 	  var result;
-	  if(O !== null){
+	  if (O !== null) {
 	    Empty[PROTOTYPE] = anObject(O);
-	    result = new Empty;
+	    result = new Empty();
 	    Empty[PROTOTYPE] = null;
 	    // add "__proto__" for Object.getPrototypeOf polyfill
 	    result[IE_PROTO] = O;
@@ -929,53 +975,56 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var dP       = __webpack_require__(21)
-	  , anObject = __webpack_require__(22)
-	  , getKeys  = __webpack_require__(35);
+	var dP = __webpack_require__(21);
+	var anObject = __webpack_require__(22);
+	var getKeys = __webpack_require__(35);
 
-	module.exports = __webpack_require__(25) ? Object.defineProperties : function defineProperties(O, Properties){
+	module.exports = __webpack_require__(25) ? Object.defineProperties : function defineProperties(O, Properties) {
 	  anObject(O);
-	  var keys   = getKeys(Properties)
-	    , length = keys.length
-	    , i = 0
-	    , P;
-	  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
+	  var keys = getKeys(Properties);
+	  var length = keys.length;
+	  var i = 0;
+	  var P;
+	  while (length > i) dP.f(O, P = keys[i++], Properties[P]);
 	  return O;
 	};
+
 
 /***/ }),
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.14 / 15.2.3.14 Object.keys(O)
-	var $keys       = __webpack_require__(36)
-	  , enumBugKeys = __webpack_require__(44);
+	var $keys = __webpack_require__(36);
+	var enumBugKeys = __webpack_require__(44);
 
-	module.exports = Object.keys || function keys(O){
+	module.exports = Object.keys || function keys(O) {
 	  return $keys(O, enumBugKeys);
 	};
+
 
 /***/ }),
 /* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var has          = __webpack_require__(31)
-	  , toIObject    = __webpack_require__(9)
-	  , arrayIndexOf = __webpack_require__(37)(false)
-	  , IE_PROTO     = __webpack_require__(41)('IE_PROTO');
+	var has = __webpack_require__(30);
+	var toIObject = __webpack_require__(9);
+	var arrayIndexOf = __webpack_require__(37)(false);
+	var IE_PROTO = __webpack_require__(41)('IE_PROTO');
 
-	module.exports = function(object, names){
-	  var O      = toIObject(object)
-	    , i      = 0
-	    , result = []
-	    , key;
-	  for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
+	module.exports = function (object, names) {
+	  var O = toIObject(object);
+	  var i = 0;
+	  var result = [];
+	  var key;
+	  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
 	  // Don't enum bug & hidden keys
-	  while(names.length > i)if(has(O, key = names[i++])){
+	  while (names.length > i) if (has(O, key = names[i++])) {
 	    ~arrayIndexOf(result, key) || result.push(key);
 	  }
 	  return result;
 	};
+
 
 /***/ }),
 /* 37 */
@@ -983,90 +1032,105 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// false -> Array#indexOf
 	// true  -> Array#includes
-	var toIObject = __webpack_require__(9)
-	  , toLength  = __webpack_require__(38)
-	  , toIndex   = __webpack_require__(40);
-	module.exports = function(IS_INCLUDES){
-	  return function($this, el, fromIndex){
-	    var O      = toIObject($this)
-	      , length = toLength(O.length)
-	      , index  = toIndex(fromIndex, length)
-	      , value;
+	var toIObject = __webpack_require__(9);
+	var toLength = __webpack_require__(38);
+	var toAbsoluteIndex = __webpack_require__(40);
+	module.exports = function (IS_INCLUDES) {
+	  return function ($this, el, fromIndex) {
+	    var O = toIObject($this);
+	    var length = toLength(O.length);
+	    var index = toAbsoluteIndex(fromIndex, length);
+	    var value;
 	    // Array#includes uses SameValueZero equality algorithm
-	    if(IS_INCLUDES && el != el)while(length > index){
+	    // eslint-disable-next-line no-self-compare
+	    if (IS_INCLUDES && el != el) while (length > index) {
 	      value = O[index++];
-	      if(value != value)return true;
-	    // Array#toIndex ignores holes, Array#includes - not
-	    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
-	      if(O[index] === el)return IS_INCLUDES || index || 0;
+	      // eslint-disable-next-line no-self-compare
+	      if (value != value) return true;
+	    // Array#indexOf ignores holes, Array#includes - not
+	    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+	      if (O[index] === el) return IS_INCLUDES || index || 0;
 	    } return !IS_INCLUDES && -1;
 	  };
 	};
+
 
 /***/ }),
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 7.1.15 ToLength
-	var toInteger = __webpack_require__(39)
-	  , min       = Math.min;
-	module.exports = function(it){
+	var toInteger = __webpack_require__(39);
+	var min = Math.min;
+	module.exports = function (it) {
 	  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 	};
+
 
 /***/ }),
 /* 39 */
 /***/ (function(module, exports) {
 
 	// 7.1.4 ToInteger
-	var ceil  = Math.ceil
-	  , floor = Math.floor;
-	module.exports = function(it){
+	var ceil = Math.ceil;
+	var floor = Math.floor;
+	module.exports = function (it) {
 	  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 	};
+
 
 /***/ }),
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var toInteger = __webpack_require__(39)
-	  , max       = Math.max
-	  , min       = Math.min;
-	module.exports = function(index, length){
+	var toInteger = __webpack_require__(39);
+	var max = Math.max;
+	var min = Math.min;
+	module.exports = function (index, length) {
 	  index = toInteger(index);
 	  return index < 0 ? max(index + length, 0) : min(index, length);
 	};
+
 
 /***/ }),
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var shared = __webpack_require__(42)('keys')
-	  , uid    = __webpack_require__(43);
-	module.exports = function(key){
+	var shared = __webpack_require__(42)('keys');
+	var uid = __webpack_require__(43);
+	module.exports = function (key) {
 	  return shared[key] || (shared[key] = uid(key));
 	};
+
 
 /***/ }),
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var global = __webpack_require__(16)
-	  , SHARED = '__core-js_shared__'
-	  , store  = global[SHARED] || (global[SHARED] = {});
-	module.exports = function(key){
-	  return store[key] || (store[key] = {});
-	};
+	var core = __webpack_require__(17);
+	var global = __webpack_require__(16);
+	var SHARED = '__core-js_shared__';
+	var store = global[SHARED] || (global[SHARED] = {});
+
+	(module.exports = function (key, value) {
+	  return store[key] || (store[key] = value !== undefined ? value : {});
+	})('versions', []).push({
+	  version: core.version,
+	  mode: __webpack_require__(14) ? 'pure' : 'global',
+	  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
+	});
+
 
 /***/ }),
 /* 43 */
 /***/ (function(module, exports) {
 
-	var id = 0
-	  , px = Math.random();
-	module.exports = function(key){
+	var id = 0;
+	var px = Math.random();
+	module.exports = function (key) {
 	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 	};
+
 
 /***/ }),
 /* 44 */
@@ -1077,57 +1141,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 	).split(',');
 
+
 /***/ }),
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(16).document && document.documentElement;
+	var document = __webpack_require__(16).document;
+	module.exports = document && document.documentElement;
+
 
 /***/ }),
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var def = __webpack_require__(21).f
-	  , has = __webpack_require__(31)
-	  , TAG = __webpack_require__(47)('toStringTag');
+	var def = __webpack_require__(21).f;
+	var has = __webpack_require__(30);
+	var TAG = __webpack_require__(47)('toStringTag');
 
-	module.exports = function(it, tag, stat){
-	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	module.exports = function (it, tag, stat) {
+	  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
 	};
+
 
 /***/ }),
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var store      = __webpack_require__(42)('wks')
-	  , uid        = __webpack_require__(43)
-	  , Symbol     = __webpack_require__(16).Symbol
-	  , USE_SYMBOL = typeof Symbol == 'function';
+	var store = __webpack_require__(42)('wks');
+	var uid = __webpack_require__(43);
+	var Symbol = __webpack_require__(16).Symbol;
+	var USE_SYMBOL = typeof Symbol == 'function';
 
-	var $exports = module.exports = function(name){
+	var $exports = module.exports = function (name) {
 	  return store[name] || (store[name] =
 	    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
 	};
 
 	$exports.store = store;
 
+
 /***/ }),
 /* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-	var has         = __webpack_require__(31)
-	  , toObject    = __webpack_require__(49)
-	  , IE_PROTO    = __webpack_require__(41)('IE_PROTO')
-	  , ObjectProto = Object.prototype;
+	var has = __webpack_require__(30);
+	var toObject = __webpack_require__(49);
+	var IE_PROTO = __webpack_require__(41)('IE_PROTO');
+	var ObjectProto = Object.prototype;
 
-	module.exports = Object.getPrototypeOf || function(O){
+	module.exports = Object.getPrototypeOf || function (O) {
 	  O = toObject(O);
-	  if(has(O, IE_PROTO))return O[IE_PROTO];
-	  if(typeof O.constructor == 'function' && O instanceof O.constructor){
+	  if (has(O, IE_PROTO)) return O[IE_PROTO];
+	  if (typeof O.constructor == 'function' && O instanceof O.constructor) {
 	    return O.constructor.prototype;
 	  } return O instanceof Object ? ObjectProto : null;
 	};
+
 
 /***/ }),
 /* 49 */
@@ -1135,47 +1205,49 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// 7.1.13 ToObject(argument)
 	var defined = __webpack_require__(12);
-	module.exports = function(it){
+	module.exports = function (it) {
 	  return Object(defined(it));
 	};
+
 
 /***/ }),
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-	var $at  = __webpack_require__(51)(true);
+	var $at = __webpack_require__(51)(true);
 
 	// 21.1.3.27 String.prototype[@@iterator]()
-	__webpack_require__(13)(String, 'String', function(iterated){
+	__webpack_require__(13)(String, 'String', function (iterated) {
 	  this._t = String(iterated); // target
 	  this._i = 0;                // next index
 	// 21.1.5.2.1 %StringIteratorPrototype%.next()
-	}, function(){
-	  var O     = this._t
-	    , index = this._i
-	    , point;
-	  if(index >= O.length)return {value: undefined, done: true};
+	}, function () {
+	  var O = this._t;
+	  var index = this._i;
+	  var point;
+	  if (index >= O.length) return { value: undefined, done: true };
 	  point = $at(O, index);
 	  this._i += point.length;
-	  return {value: point, done: false};
+	  return { value: point, done: false };
 	});
+
 
 /***/ }),
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var toInteger = __webpack_require__(39)
-	  , defined   = __webpack_require__(12);
+	var toInteger = __webpack_require__(39);
+	var defined = __webpack_require__(12);
 	// true  -> String#at
 	// false -> String#codePointAt
-	module.exports = function(TO_STRING){
-	  return function(that, pos){
-	    var s = String(defined(that))
-	      , i = toInteger(pos)
-	      , l = s.length
-	      , a, b;
-	    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
+	module.exports = function (TO_STRING) {
+	  return function (that, pos) {
+	    var s = String(defined(that));
+	    var i = toInteger(pos);
+	    var l = s.length;
+	    var a, b;
+	    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
 	    a = s.charCodeAt(i);
 	    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
 	      ? TO_STRING ? s.charAt(i) : a
@@ -1183,49 +1255,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	};
 
+
 /***/ }),
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var anObject = __webpack_require__(22)
-	  , get      = __webpack_require__(53);
-	module.exports = __webpack_require__(17).getIterator = function(it){
+	var anObject = __webpack_require__(22);
+	var get = __webpack_require__(53);
+	module.exports = __webpack_require__(17).getIterator = function (it) {
 	  var iterFn = get(it);
-	  if(typeof iterFn != 'function')throw TypeError(it + ' is not iterable!');
+	  if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
 	  return anObject(iterFn.call(it));
 	};
+
 
 /***/ }),
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var classof   = __webpack_require__(54)
-	  , ITERATOR  = __webpack_require__(47)('iterator')
-	  , Iterators = __webpack_require__(8);
-	module.exports = __webpack_require__(17).getIteratorMethod = function(it){
-	  if(it != undefined)return it[ITERATOR]
+	var classof = __webpack_require__(54);
+	var ITERATOR = __webpack_require__(47)('iterator');
+	var Iterators = __webpack_require__(8);
+	module.exports = __webpack_require__(17).getIteratorMethod = function (it) {
+	  if (it != undefined) return it[ITERATOR]
 	    || it['@@iterator']
 	    || Iterators[classof(it)];
 	};
+
 
 /***/ }),
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// getting tag from 19.1.3.6 Object.prototype.toString()
-	var cof = __webpack_require__(11)
-	  , TAG = __webpack_require__(47)('toStringTag')
-	  // ES3 wrong here
-	  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
+	var cof = __webpack_require__(11);
+	var TAG = __webpack_require__(47)('toStringTag');
+	// ES3 wrong here
+	var ARG = cof(function () { return arguments; }()) == 'Arguments';
 
 	// fallback for IE11 Script Access Denied error
-	var tryGet = function(it, key){
+	var tryGet = function (it, key) {
 	  try {
 	    return it[key];
-	  } catch(e){ /* empty */ }
+	  } catch (e) { /* empty */ }
 	};
 
-	module.exports = function(it){
+	module.exports = function (it) {
 	  var O, T, B;
 	  return it === undefined ? 'Undefined' : it === null ? 'Null'
 	    // @@toStringTag case
@@ -1235,6 +1310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // ES3 arguments fallback
 	    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 	};
+
 
 /***/ }),
 /* 55 */
@@ -1249,34 +1325,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(57);
 	module.exports = __webpack_require__(17).Object.keys;
 
+
 /***/ }),
 /* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// 19.1.2.14 Object.keys(O)
-	var toObject = __webpack_require__(49)
-	  , $keys    = __webpack_require__(35);
+	var toObject = __webpack_require__(49);
+	var $keys = __webpack_require__(35);
 
-	__webpack_require__(58)('keys', function(){
-	  return function keys(it){
+	__webpack_require__(58)('keys', function () {
+	  return function keys(it) {
 	    return $keys(toObject(it));
 	  };
 	});
+
 
 /***/ }),
 /* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// most Object methods by ES6 should accept primitives
-	var $export = __webpack_require__(15)
-	  , core    = __webpack_require__(17)
-	  , fails   = __webpack_require__(26);
-	module.exports = function(KEY, exec){
-	  var fn  = (core.Object || {})[KEY] || Object[KEY]
-	    , exp = {};
+	var $export = __webpack_require__(15);
+	var core = __webpack_require__(17);
+	var fails = __webpack_require__(26);
+	module.exports = function (KEY, exec) {
+	  var fn = (core.Object || {})[KEY] || Object[KEY];
+	  var exp = {};
 	  exp[KEY] = exec(fn);
-	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	  $export($export.S + $export.F * fails(function () { fn(1); }), 'Object', exp);
 	};
+
 
 /***/ }),
 /* 59 */
@@ -2174,7 +2253,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 64 */
 /***/ (function(module, exports) {
 
-	module.exports=/[!-#%-\*,-/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E44\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD807[\uDC41-\uDC45\uDC70\uDC71]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
+	module.exports=/[!-#%-\*,-\/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4E\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD803[\uDF55-\uDF59]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC8\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD806[\uDC3B\uDE3F-\uDE46\uDE9A-\uDE9C\uDE9E-\uDEA2]|\uD807[\uDC41-\uDC45\uDC70\uDC71\uDEF7\uDEF8]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD81B[\uDE97-\uDE9A]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
 
 /***/ }),
 /* 65 */
@@ -2799,13 +2878,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 73 */
 /***/ (function(module, exports) {
 
-	module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804\uDCBD|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
+	module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804[\uDCBD\uDCCD]|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
 
 /***/ }),
 /* 74 */
 /***/ (function(module, exports) {
 
-	module.exports=/[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/
+	module.exports=/[ \xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/
 
 /***/ }),
 /* 75 */
@@ -10632,13 +10711,165 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.default = _default;
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _clone = _interopRequireDefault(__webpack_require__(141));
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _uslug = _interopRequireDefault(__webpack_require__(146));
 
-	exports.default = function (md, options) {
-	  options = _extends({
+	var _token = _interopRequireDefault(__webpack_require__(89));
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+	function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+	function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+	function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+	function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+	function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var TOC = "@[toc]";
+	var TOC_RE = /^@\[toc\]/im;
+
+	var markdownItSecondInstance = function markdownItSecondInstance() {};
+
+	var headingIds = {};
+	var tocHtml = "";
+
+	var repeat = function repeat(string, num) {
+	  return new Array(num + 1).join(string);
+	};
+
+	var makeSafe = function makeSafe(string, headingIds, slugifyFn) {
+	  var key = slugifyFn(string); // slugify
+
+	  if (!headingIds[key]) {
+	    headingIds[key] = 0;
+	  }
+
+	  headingIds[key]++;
+	  return key + (headingIds[key] > 1 ? "-".concat(headingIds[key]) : "");
+	};
+
+	var space = function space() {
+	  return _objectSpread({}, new _token.default("text", "", 0), {
+	    content: " "
+	  });
+	};
+
+	var renderAnchorLinkSymbol = function renderAnchorLinkSymbol(options) {
+	  if (options.anchorLinkSymbolClassName) {
+	    return [_objectSpread({}, new _token.default("span_open", "span", 1), {
+	      attrs: [["class", options.anchorLinkSymbolClassName]]
+	    }), _objectSpread({}, new _token.default("text", "", 0), {
+	      content: options.anchorLinkSymbol
+	    }), new _token.default("span_close", "span", -1)];
+	  } else {
+	    return [_objectSpread({}, new _token.default("text", "", 0), {
+	      content: options.anchorLinkSymbol
+	    })];
+	  }
+	};
+
+	var renderAnchorLink = function renderAnchorLink(anchor, options, tokens, idx) {
+	  var attrs = [];
+
+	  if (options.anchorClassName != null) {
+	    attrs.push(["class", options.anchorClassName]);
+	  }
+
+	  attrs.push(["href", "#".concat(anchor)]);
+
+	  var openLinkToken = _objectSpread({}, new _token.default("link_open", "a", 1), {
+	    attrs: attrs
+	  });
+
+	  var closeLinkToken = new _token.default("link_close", "a", -1);
+
+	  if (options.wrapHeadingTextInAnchor) {
+	    tokens[idx + 1].children.unshift(openLinkToken);
+	    tokens[idx + 1].children.push(closeLinkToken);
+	  } else {
+	    var _tokens$children;
+
+	    var linkTokens = [openLinkToken].concat(_toConsumableArray(renderAnchorLinkSymbol(options)), [closeLinkToken]); // `push` or `unshift` according to anchorLinkBefore option
+	    // space is at the opposite side.
+
+	    var actionOnArray = {
+	      false: "push",
+	      true: "unshift"
+	    }; // insert space between anchor link and heading ?
+
+	    if (options.anchorLinkSpace) {
+	      linkTokens[actionOnArray[!options.anchorLinkBefore]](space());
+	    }
+
+	    (_tokens$children = tokens[idx + 1].children)[actionOnArray[options.anchorLinkBefore]].apply(_tokens$children, _toConsumableArray(linkTokens));
+	  }
+	};
+
+	var treeToMarkdownBulletList = function treeToMarkdownBulletList(tree) {
+	  var indent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	  return tree.map(function (item) {
+	    var indentation = "  ";
+	    var node = "".concat(repeat(indentation, indent), "*");
+
+	    if (item.heading.content) {
+	      var contentWithoutAnchor = item.heading.content.replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+	      node += " " + "[".concat(contentWithoutAnchor, "](#").concat(item.heading.anchor, ")\n");
+	    } else {
+	      node += "\n";
+	    }
+
+	    if (item.nodes.length) {
+	      node += treeToMarkdownBulletList(item.nodes, indent + 1);
+	    }
+
+	    return node;
+	  }).join("");
+	};
+
+	var generateTocMarkdownFromArray = function generateTocMarkdownFromArray(headings, options) {
+	  var tree = {
+	    nodes: []
+	  }; // create an ast
+
+	  headings.forEach(function (heading) {
+	    if (heading.level < options.tocFirstLevel || heading.level > options.tocLastLevel) {
+	      return;
+	    }
+
+	    var i = 1;
+	    var lastItem = tree;
+
+	    for (; i < heading.level - options.tocFirstLevel + 1; i++) {
+	      if (lastItem.nodes.length === 0) {
+	        lastItem.nodes.push({
+	          heading: {},
+	          nodes: []
+	        });
+	      }
+
+	      lastItem = lastItem.nodes[lastItem.nodes.length - 1];
+	    }
+
+	    lastItem.nodes.push({
+	      heading: heading,
+	      nodes: []
+	    });
+	  });
+	  return treeToMarkdownBulletList(tree.nodes);
+	};
+
+	function _default(md, options) {
+	  options = _objectSpread({
 	    toc: true,
 	    tocClassName: "markdownIt-TOC",
 	    tocFirstLevel: 1,
@@ -10650,19 +10881,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    anchorClassName: "markdownIt-Anchor",
 	    resetIds: true,
 	    anchorLinkSpace: true,
-	    anchorLinkSymbolClassName: null
+	    anchorLinkSymbolClassName: null,
+	    wrapHeadingTextInAnchor: false
 	  }, options);
+	  markdownItSecondInstance = (0, _clone.default)(md); // initialize key ids for each instance
 
-	  markdownItSecondInstance = (0, _clone2.default)(md);
-
-	  // initialize key ids for each instance
 	  headingIds = {};
-
 	  md.core.ruler.push("init_toc", function (state) {
-	    Token = state.Token;
-	    var tokens = state.tokens;
+	    var tokens = state.tokens; // reset key ids for each document
 
-	    // reset key ids for each document
 	    if (options.resetIds) {
 	      headingIds = {};
 	    }
@@ -10670,6 +10897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var tocArray = [];
 	    var tocMarkdown = "";
 	    var tocTokens = [];
+	    var slugifyFn = typeof options.slugify === "function" && options.slugify || _uslug.default;
 
 	    for (var i = 0; i < tokens.length; i++) {
 	      if (tokens[i].type !== "heading_close") {
@@ -10681,16 +10909,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (heading.type === "inline") {
 	        var content = void 0;
-	        if (heading.children && heading.children[0].type === "link_open") {
+
+	        if (heading.children && heading.children.length > 0 && heading.children[0].type === "link_open") {
 	          // headings that contain links have to be processed
 	          // differently since nested links aren't allowed in markdown
 	          content = heading.children[1].content;
-	          heading._tocAnchor = makeSafe(content, headingIds);
+	          heading._tocAnchor = makeSafe(content, headingIds, slugifyFn);
 	        } else {
 	          content = heading.content;
 	          heading._tocAnchor = makeSafe(heading.children.reduce(function (acc, t) {
 	            return acc + t.content;
-	          }, ""), headingIds);
+	          }, ""), headingIds, slugifyFn);
+	        }
+
+	        if (options.anchorLinkPrefix) {
+	          heading._tocAnchor = options.anchorLinkPrefix + heading._tocAnchor;
 	        }
 
 	        tocArray.push({
@@ -10702,13 +10935,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    tocMarkdown = generateTocMarkdownFromArray(tocArray, options);
+	    tocTokens = markdownItSecondInstance.parse(tocMarkdown, {}); // Adding tocClassName to 'ul' element
 
-	    tocTokens = markdownItSecondInstance.parse(tocMarkdown, {});
-
-	    // Adding tocClassName to 'ul' element
 	    if (_typeof(tocTokens[0]) === "object" && tocTokens[0].type === "bullet_list_open") {
 	      var attrs = tocTokens[0].attrs = tocTokens[0].attrs || [];
-	      attrs.push(["class", options.tocClassName]);
+
+	      if (options.tocClassName != null) {
+	        attrs.push(["class", options.tocClassName]);
+	      }
 	    }
 
 	    tocHtml = markdownItSecondInstance.renderer.render(tocTokens, markdownItSecondInstance.options);
@@ -10721,56 +10955,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	      md.options.tocCallback.call(undefined, tocMarkdown, tocArray, tocHtml);
 	    }
 	  });
-
 	  md.inline.ruler.after("emphasis", "toc", function (state, silent) {
+	    var token;
+	    var match;
 
-	    var token = void 0;
-	    var match = void 0;
-
-	    while (state.src.indexOf("\n") >= 0 && state.src.indexOf("\n") < state.src.indexOf(TOC)) {
-	      if (state.tokens.slice(-1)[0].type === "softbreak") {
-	        state.src = state.src.split("\n").slice(1).join("\n");
-	        state.pos = 0;
-	      }
-	    }
-
-	    if (
-	    // Reject if the token does not start with @[
-	    state.src.charCodeAt(state.pos) !== 0x40 || state.src.charCodeAt(state.pos + 1) !== 0x5B ||
-
-	    // Don’t run any pairs in validation mode
+	    if ( // Reject if the token does not start with @[
+	    state.src.charCodeAt(state.pos) !== 0x40 || state.src.charCodeAt(state.pos + 1) !== 0x5b || // Don’t run any pairs in validation mode
 	    silent) {
 	      return false;
-	    }
+	    } // Detect TOC markdown
 
-	    // Detect TOC markdown
+
 	    match = TOC_RE.exec(state.src);
 	    match = !match ? [] : match.filter(function (m) {
 	      return m;
 	    });
+
 	    if (match.length < 1) {
 	      return false;
-	    }
+	    } // Build content
 
-	    // Build content
+
 	    token = state.push("toc_open", "toc", 1);
 	    token.markup = TOC;
 	    token = state.push("toc_body", "", 0);
-	    token = state.push("toc_close", "toc", -1);
+	    token = state.push("toc_close", "toc", -1); // Update pos so the parser can continue
 
-	    // Update pos so the parser can continue
-	    var newline = state.src.indexOf("\n");
-	    if (newline !== -1) {
-	      state.pos = state.pos + newline;
-	    } else {
-	      state.pos = state.pos + state.posMax + 1;
-	    }
-
+	    state.pos = state.pos + 6;
 	    return true;
 	  });
 
 	  var originalHeadingOpen = md.renderer.rules.heading_open || function () {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	      args[_key] = arguments[_key];
 	    }
 
@@ -10778,25 +10994,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        idx = args[1],
 	        options = args[2],
 	        self = args[4];
-
 	    return self.renderToken(tokens, idx, options);
 	  };
 
 	  md.renderer.rules.heading_open = function () {
-	    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 	      args[_key2] = arguments[_key2];
 	    }
 
 	    var tokens = args[0],
 	        idx = args[1];
-
-
 	    var attrs = tokens[idx].attrs = tokens[idx].attrs || [];
 	    var anchor = tokens[idx + 1]._tocAnchor;
 	    attrs.push(["id", anchor]);
 
 	    if (options.anchorLink) {
-	      renderAnchorLink.apply(undefined, [anchor, options].concat(args));
+	      renderAnchorLink.apply(void 0, [anchor, options].concat(args));
 	    }
 
 	    return originalHeadingOpen.apply(this, args);
@@ -10805,9 +11018,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  md.renderer.rules.toc_open = function () {
 	    return "";
 	  };
+
 	  md.renderer.rules.toc_close = function () {
 	    return "";
 	  };
+
 	  md.renderer.rules.toc_body = function () {
 	    return "";
 	  };
@@ -10817,124 +11032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return tocHtml;
 	    };
 	  }
-	};
-
-	var _clone = __webpack_require__(141);
-
-	var _clone2 = _interopRequireDefault(_clone);
-
-	var _uslug = __webpack_require__(146);
-
-	var _uslug2 = _interopRequireDefault(_uslug);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	var TOC = "@[toc]";
-	var TOC_RE = /^@\[toc\]/im;
-
-	var markdownItSecondInstance = function markdownItSecondInstance() {};
-	var Token = function Token() {};
-	var headingIds = {};
-	var tocHtml = "";
-
-	var repeat = function repeat(string, num) {
-	  return new Array(num + 1).join(string);
-	};
-
-	var makeSafe = function makeSafe(string, headingIds) {
-	  var key = (0, _uslug2.default)(string); // slugify
-	  if (!headingIds[key]) {
-	    headingIds[key] = 0;
-	  }
-	  headingIds[key]++;
-	  return key + (headingIds[key] > 1 ? "-" + headingIds[key] : "");
-	};
-
-	var space = function space() {
-	  return _extends({}, new Token("text", "", 0), { content: " " });
-	};
-
-	var renderAnchorLinkSymbol = function renderAnchorLinkSymbol(options) {
-	  if (options.anchorLinkSymbolClassName) {
-	    return [_extends({}, new Token("span_open", "span", 1), {
-	      attrs: [["class", options.anchorLinkSymbolClassName]]
-	    }), _extends({}, new Token("text", "", 0), {
-	      content: options.anchorLinkSymbol
-	    }), new Token("span_close", "span", -1)];
-	  } else {
-	    return [_extends({}, new Token("text", "", 0), {
-	      content: options.anchorLinkSymbol
-	    })];
-	  }
-	};
-
-	var renderAnchorLink = function renderAnchorLink(anchor, options, tokens, idx) {
-	  var _tokens$children;
-
-	  var linkTokens = [_extends({}, new Token("link_open", "a", 1), {
-	    attrs: [["class", options.anchorClassName], ["href", "#" + anchor]]
-	  })].concat(_toConsumableArray(renderAnchorLinkSymbol(options)), [new Token("link_close", "a", -1)]);
-
-	  // `push` or `unshift` according to anchorLinkBefore option
-	  // space is at the opposite side.
-	  var actionOnArray = {
-	    false: "push",
-	    true: "unshift"
-	  };
-
-	  // insert space between anchor link and heading ?
-	  if (options.anchorLinkSpace) {
-	    linkTokens[actionOnArray[!options.anchorLinkBefore]](space());
-	  }
-	  (_tokens$children = tokens[idx + 1].children)[actionOnArray[options.anchorLinkBefore]].apply(_tokens$children, _toConsumableArray(linkTokens));
-	};
-
-	var treeToMarkdownBulletList = function treeToMarkdownBulletList(tree) {
-	  var indent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-	  return tree.map(function (item) {
-	    var indentation = "  ";
-	    var node = repeat(indentation, indent) + "*";
-	    if (item.heading.content) {
-	      node += " " + ("[" + item.heading.content + "](#" + item.heading.anchor + ")\n");
-	    } else {
-	      node += "\n";
-	    }
-	    if (item.nodes.length) {
-	      node += treeToMarkdownBulletList(item.nodes, indent + 1);
-	    }
-	    return node;
-	  }).join("");
-	};
-
-	var generateTocMarkdownFromArray = function generateTocMarkdownFromArray(headings, options) {
-	  var tree = { nodes: [] };
-	  // create an ast
-	  headings.forEach(function (heading) {
-	    if (heading.level < options.tocFirstLevel || heading.level > options.tocLastLevel) {
-	      return;
-	    }
-
-	    var i = 1;
-	    var lastItem = tree;
-	    for (; i < heading.level - options.tocFirstLevel + 1; i++) {
-	      if (lastItem.nodes.length === 0) {
-	        lastItem.nodes.push({
-	          heading: {},
-	          nodes: []
-	        });
-	      }
-	      lastItem = lastItem.nodes[lastItem.nodes.length - 1];
-	    }
-	    lastItem.nodes.push({
-	      heading: heading,
-	      nodes: []
-	    });
-	  });
-
-	  return treeToMarkdownBulletList(tree.nodes);
-	};
+	}
 
 /***/ }),
 /* 141 */
@@ -11046,7 +11144,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else if (clone.__isDate(parent)) {
 	      child = new Date(parent.getTime());
 	    } else if (useBuffer && Buffer.isBuffer(parent)) {
-	      child = new Buffer(parent.length);
+	      if (Buffer.allocUnsafe) {
+	        // Node.js >= 4.5.0
+	        child = Buffer.allocUnsafe(parent.length);
+	      } else {
+	        // Older Node.js versions
+	        child = new Buffer(parent.length);
+	      }
 	      parent.copy(child);
 	      return child;
 	    } else if (_instanceof(parent, Error)) {
@@ -13010,68 +13114,102 @@ return /******/ (function(modules) { // webpackBootstrap
 	  revLookup[code.charCodeAt(i)] = i
 	}
 
+	// Support decoding URL-safe base64 strings, as Node.js does.
+	// See: https://en.wikipedia.org/wiki/Base64#URL_applications
 	revLookup['-'.charCodeAt(0)] = 62
 	revLookup['_'.charCodeAt(0)] = 63
 
-	function placeHoldersCount (b64) {
+	function getLens (b64) {
 	  var len = b64.length
+
 	  if (len % 4 > 0) {
 	    throw new Error('Invalid string. Length must be a multiple of 4')
 	  }
 
-	  // the number of equal signs (place holders)
-	  // if there are two placeholders, than the two characters before it
-	  // represent one byte
-	  // if there is only one, then the three characters before it represent 2 bytes
-	  // this is just a cheap hack to not do indexOf twice
-	  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+	  // Trim off extra bytes after placeholder bytes are found
+	  // See: https://github.com/beatgammit/base64-js/issues/42
+	  var validLen = b64.indexOf('=')
+	  if (validLen === -1) validLen = len
+
+	  var placeHoldersLen = validLen === len
+	    ? 0
+	    : 4 - (validLen % 4)
+
+	  return [validLen, placeHoldersLen]
 	}
 
+	// base64 is 4/3 + up to two characters of the original data
 	function byteLength (b64) {
-	  // base64 is 4/3 + up to two characters of the original data
-	  return (b64.length * 3 / 4) - placeHoldersCount(b64)
+	  var lens = getLens(b64)
+	  var validLen = lens[0]
+	  var placeHoldersLen = lens[1]
+	  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
+	}
+
+	function _byteLength (b64, validLen, placeHoldersLen) {
+	  return ((validLen + placeHoldersLen) * 3 / 4) - placeHoldersLen
 	}
 
 	function toByteArray (b64) {
-	  var i, l, tmp, placeHolders, arr
-	  var len = b64.length
-	  placeHolders = placeHoldersCount(b64)
+	  var tmp
+	  var lens = getLens(b64)
+	  var validLen = lens[0]
+	  var placeHoldersLen = lens[1]
 
-	  arr = new Arr((len * 3 / 4) - placeHolders)
+	  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen))
+
+	  var curByte = 0
 
 	  // if there are placeholders, only get up to the last complete 4 chars
-	  l = placeHolders > 0 ? len - 4 : len
+	  var len = placeHoldersLen > 0
+	    ? validLen - 4
+	    : validLen
 
-	  var L = 0
-
-	  for (i = 0; i < l; i += 4) {
-	    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
-	    arr[L++] = (tmp >> 16) & 0xFF
-	    arr[L++] = (tmp >> 8) & 0xFF
-	    arr[L++] = tmp & 0xFF
+	  for (var i = 0; i < len; i += 4) {
+	    tmp =
+	      (revLookup[b64.charCodeAt(i)] << 18) |
+	      (revLookup[b64.charCodeAt(i + 1)] << 12) |
+	      (revLookup[b64.charCodeAt(i + 2)] << 6) |
+	      revLookup[b64.charCodeAt(i + 3)]
+	    arr[curByte++] = (tmp >> 16) & 0xFF
+	    arr[curByte++] = (tmp >> 8) & 0xFF
+	    arr[curByte++] = tmp & 0xFF
 	  }
 
-	  if (placeHolders === 2) {
-	    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
-	    arr[L++] = tmp & 0xFF
-	  } else if (placeHolders === 1) {
-	    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
-	    arr[L++] = (tmp >> 8) & 0xFF
-	    arr[L++] = tmp & 0xFF
+	  if (placeHoldersLen === 2) {
+	    tmp =
+	      (revLookup[b64.charCodeAt(i)] << 2) |
+	      (revLookup[b64.charCodeAt(i + 1)] >> 4)
+	    arr[curByte++] = tmp & 0xFF
+	  }
+
+	  if (placeHoldersLen === 1) {
+	    tmp =
+	      (revLookup[b64.charCodeAt(i)] << 10) |
+	      (revLookup[b64.charCodeAt(i + 1)] << 4) |
+	      (revLookup[b64.charCodeAt(i + 2)] >> 2)
+	    arr[curByte++] = (tmp >> 8) & 0xFF
+	    arr[curByte++] = tmp & 0xFF
 	  }
 
 	  return arr
 	}
 
 	function tripletToBase64 (num) {
-	  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+	  return lookup[num >> 18 & 0x3F] +
+	    lookup[num >> 12 & 0x3F] +
+	    lookup[num >> 6 & 0x3F] +
+	    lookup[num & 0x3F]
 	}
 
 	function encodeChunk (uint8, start, end) {
 	  var tmp
 	  var output = []
 	  for (var i = start; i < end; i += 3) {
-	    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+	    tmp =
+	      ((uint8[i] << 16) & 0xFF0000) +
+	      ((uint8[i + 1] << 8) & 0xFF00) +
+	      (uint8[i + 2] & 0xFF)
 	    output.push(tripletToBase64(tmp))
 	  }
 	  return output.join('')
@@ -13081,30 +13219,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var tmp
 	  var len = uint8.length
 	  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-	  var output = ''
 	  var parts = []
 	  var maxChunkLength = 16383 // must be multiple of 3
 
 	  // go through the array every three bytes, we'll deal with trailing stuff later
 	  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-	    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+	    parts.push(encodeChunk(
+	      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
+	    ))
 	  }
 
 	  // pad the end with zeros, but make sure to not forget the extra bytes
 	  if (extraBytes === 1) {
 	    tmp = uint8[len - 1]
-	    output += lookup[tmp >> 2]
-	    output += lookup[(tmp << 4) & 0x3F]
-	    output += '=='
+	    parts.push(
+	      lookup[tmp >> 2] +
+	      lookup[(tmp << 4) & 0x3F] +
+	      '=='
+	    )
 	  } else if (extraBytes === 2) {
-	    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
-	    output += lookup[tmp >> 10]
-	    output += lookup[(tmp >> 4) & 0x3F]
-	    output += lookup[(tmp << 2) & 0x3F]
-	    output += '='
+	    tmp = (uint8[len - 2] << 8) + uint8[len - 1]
+	    parts.push(
+	      lookup[tmp >> 10] +
+	      lookup[(tmp >> 4) & 0x3F] +
+	      lookup[(tmp << 2) & 0x3F] +
+	      '='
+	    )
 	  }
-
-	  parts.push(output)
 
 	  return parts.join('')
 	}
@@ -13116,7 +13257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 	  var e, m
-	  var eLen = nBytes * 8 - mLen - 1
+	  var eLen = (nBytes * 8) - mLen - 1
 	  var eMax = (1 << eLen) - 1
 	  var eBias = eMax >> 1
 	  var nBits = -7
@@ -13129,12 +13270,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  e = s & ((1 << (-nBits)) - 1)
 	  s >>= (-nBits)
 	  nBits += eLen
-	  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+	  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8) {}
 
 	  m = e & ((1 << (-nBits)) - 1)
 	  e >>= (-nBits)
 	  nBits += mLen
-	  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+	  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8) {}
 
 	  if (e === 0) {
 	    e = 1 - eBias
@@ -13149,7 +13290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 	  var e, m, c
-	  var eLen = nBytes * 8 - mLen - 1
+	  var eLen = (nBytes * 8) - mLen - 1
 	  var eMax = (1 << eLen) - 1
 	  var eBias = eMax >> 1
 	  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
@@ -13182,7 +13323,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      m = 0
 	      e = eMax
 	    } else if (e + eBias >= 1) {
-	      m = (value * c - 1) * Math.pow(2, mLen)
+	      m = ((value * c) - 1) * Math.pow(2, mLen)
 	      e = e + eBias
 	    } else {
 	      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
@@ -13784,22 +13925,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    unorm.shimApplied = false;
 
 	   if (!String.prototype.normalize) {
-	      String.prototype.normalize = function(form) {
-	         var str = "" + this;
-	         form =  form === undefined ? "NFC" : form;
-
-	         if (form === "NFC") {
-	            return unorm.nfc(str);
-	         } else if (form === "NFD") {
-	            return unorm.nfd(str);
-	         } else if (form === "NFKC") {
-	            return unorm.nfkc(str);
-	         } else if (form === "NFKD") {
-	            return unorm.nfkd(str);
-	         } else {
-	            throw new RangeError("Invalid normalization form: " + form);
+	      Object.defineProperty(String.prototype, "normalize", {
+	         enumerable: false,
+	         configurable: true,
+	         writable: true,
+	         value: function(form) {
+	            var str = "" + this;
+	            form =  form === undefined ? "NFC" : form;
+	            
+	            if (form === "NFC") {
+	               return unorm.nfc(str);
+	            } else if (form === "NFD") {
+	               return unorm.nfd(str);
+	            } else if (form === "NFKC") {
+	               return unorm.nfkc(str);
+	            } else if (form === "NFKD") {
+	               return unorm.nfkd(str);
+	            } else {
+	               throw new RangeError("Invalid normalization form: " + form);
+	            }
 	         }
-	      };
+	      });
 
 	      unorm.shimApplied = true;
 	   }
@@ -22295,20 +22441,16 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 176 */
 /***/ (function(module, exports) {
 
-	/** @flow */
-
-	"use strict";
-
 	function getRelocatable(re) {
 	  // In the future, this could use a WeakMap instead of an expando.
 	  if (!re.__matchAtRelocatable) {
 	    // Disjunctions are the lowest-precedence operator, so we can make any
 	    // pattern match the empty string by appending `|()` to it:
 	    // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-patterns
-	    var source = re.source + "|()";
+	    var source = re.source + '|()';
 
 	    // We always make the new regex global.
-	    var flags = "g" + (re.ignoreCase ? "i" : "") + (re.multiline ? "m" : "") + (re.unicode ? "u" : "")
+	    var flags = 'g' + (re.ignoreCase ? 'i' : '') + (re.multiline ? 'm' : '') + (re.unicode ? 'u' : '')
 	    // sticky (/.../y) doesn't make sense in conjunction with our relocation
 	    // logic, so we ignore it here.
 	    ;
@@ -22320,7 +22462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function matchAt(re, str, pos) {
 	  if (re.global || re.sticky) {
-	    throw new Error("matchAt(...): Only non-global regexes are supported");
+	    throw new Error('matchAt(...): Only non-global regexes are supported');
 	  }
 	  var reloc = getRelocatable(re);
 	  reloc.lastIndex = pos;
@@ -22349,11 +22491,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var disableCheckboxes = true;
 	var useLabelWrapper = false;
+	var useLabelAfter = false;
 
 	module.exports = function(md, options) {
 		if (options) {
 			disableCheckboxes = !options.enabled;
 			useLabelWrapper = !!options.label;
+			useLabelAfter = !!options.labelAfter;
 		}
 
 		md.core.ruler.after('inline', 'github-task-lists', function(state) {
@@ -22402,8 +22546,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		token.content = token.content.slice(3);
 
 		if (useLabelWrapper) {
-			token.children.unshift(beginLabel(TokenConstructor));
-			token.children.push(endLabel(TokenConstructor));
+			if (useLabelAfter) {
+				token.children.pop();
+
+				// Use large random number as id property of the checkbox.
+				var id = 'task-item-' + Math.ceil(Math.random() * (10000 * 1000) - 1000);
+				token.children[0].content = token.children[0].content.slice(0, -1) + ' id="' + id + '">';
+				token.children.push(afterLabel(token.content, id, TokenConstructor));
+			} else {
+				token.children.unshift(beginLabel(TokenConstructor));
+				token.children.push(endLabel(TokenConstructor));
+			}
 		}
 	}
 
@@ -22432,6 +22585,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		return token;
 	}
 
+	function afterLabel(content, id, TokenConstructor) {
+		var token = new TokenConstructor('html_inline', '', 0);
+		token.content = '<label class="task-list-item-label" for="' + id + '">' + content + '</label>';
+		token.attrs = [{for: id}];
+		return token;
+	}
+
 	function isInline(token) { return token.type === 'inline'; }
 	function isParagraph(token) { return token.type === 'paragraph_open'; }
 	function isListItem(token) { return token.type === 'list_item_open'; }
@@ -22441,6 +22601,585 @@ return /******/ (function(modules) { // webpackBootstrap
 		return token.content.indexOf('[ ] ') === 0 || token.content.indexOf('[x] ') === 0 || token.content.indexOf('[X] ') === 0;
 	}
 
+
+/***/ }),
+/* 178 */
+/***/ (function(module, exports) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var location = global.location || {};
+	/*jslint indent: 2, browser: true, bitwise: true, plusplus: true */
+	var twemoji = (function (
+	  /*! Copyright Twitter Inc. and other contributors. Licensed under MIT *//*
+	    https://github.com/twitter/twemoji/blob/gh-pages/LICENSE
+	  */
+
+	  // WARNING:   this file is generated automatically via
+	  //            `node 2/scripts/generate`
+	  //            please update its `createTwemoji` function
+	  //            at the bottom of the same file instead.
+
+	) {
+	  'use strict';
+
+	  /*jshint maxparams:4 */
+
+	  var
+	    // the exported module object
+	    twemoji = {
+
+
+	    /////////////////////////
+	    //      properties     //
+	    /////////////////////////
+
+	      // default assets url, by default will be Twitter Inc. CDN
+	      base: 'https://twemoji.maxcdn.com/2/',
+
+	      // default assets file extensions, by default '.png'
+	      ext: '.png',
+
+	      // default assets/folder size, by default "72x72"
+	      // available via Twitter CDN: 72
+	      size: '72x72',
+
+	      // default class name, by default 'emoji'
+	      className: 'emoji',
+
+	      // basic utilities / helpers to convert code points
+	      // to JavaScript surrogates and vice versa
+	      convert: {
+
+	        /**
+	         * Given an HEX codepoint, returns UTF16 surrogate pairs.
+	         *
+	         * @param   string  generic codepoint, i.e. '1F4A9'
+	         * @return  string  codepoint transformed into utf16 surrogates pair,
+	         *          i.e. \uD83D\uDCA9
+	         *
+	         * @example
+	         *  twemoji.convert.fromCodePoint('1f1e8');
+	         *  // "\ud83c\udde8"
+	         *
+	         *  '1f1e8-1f1f3'.split('-').map(twemoji.convert.fromCodePoint).join('')
+	         *  // "\ud83c\udde8\ud83c\uddf3"
+	         */
+	        fromCodePoint: fromCodePoint,
+
+	        /**
+	         * Given UTF16 surrogate pairs, returns the equivalent HEX codepoint.
+	         *
+	         * @param   string  generic utf16 surrogates pair, i.e. \uD83D\uDCA9
+	         * @param   string  optional separator for double code points, default='-'
+	         * @return  string  utf16 transformed into codepoint, i.e. '1F4A9'
+	         *
+	         * @example
+	         *  twemoji.convert.toCodePoint('\ud83c\udde8\ud83c\uddf3');
+	         *  // "1f1e8-1f1f3"
+	         *
+	         *  twemoji.convert.toCodePoint('\ud83c\udde8\ud83c\uddf3', '~');
+	         *  // "1f1e8~1f1f3"
+	         */
+	        toCodePoint: toCodePoint
+	      },
+
+
+	    /////////////////////////
+	    //       methods       //
+	    /////////////////////////
+
+	      /**
+	       * User first: used to remove missing images
+	       * preserving the original text intent when
+	       * a fallback for network problems is desired.
+	       * Automatically added to Image nodes via DOM
+	       * It could be recycled for string operations via:
+	       *  $('img.emoji').on('error', twemoji.onerror)
+	       */
+	      onerror: function onerror() {
+	        if (this.parentNode) {
+	          this.parentNode.replaceChild(createText(this.alt, false), this);
+	        }
+	      },
+
+	      /**
+	       * Main method/logic to generate either <img> tags or HTMLImage nodes.
+	       *  "emojify" a generic text or DOM Element.
+	       *
+	       * @overloads
+	       *
+	       * String replacement for `innerHTML` or server side operations
+	       *  twemoji.parse(string);
+	       *  twemoji.parse(string, Function);
+	       *  twemoji.parse(string, Object);
+	       *
+	       * HTMLElement tree parsing for safer operations over existing DOM
+	       *  twemoji.parse(HTMLElement);
+	       *  twemoji.parse(HTMLElement, Function);
+	       *  twemoji.parse(HTMLElement, Object);
+	       *
+	       * @param   string|HTMLElement  the source to parse and enrich with emoji.
+	       *
+	       *          string              replace emoji matches with <img> tags.
+	       *                              Mainly used to inject emoji via `innerHTML`
+	       *                              It does **not** parse the string or validate it,
+	       *                              it simply replaces found emoji with a tag.
+	       *                              NOTE: be sure this won't affect security.
+	       *
+	       *          HTMLElement         walk through the DOM tree and find emoji
+	       *                              that are inside **text node only** (nodeType === 3)
+	       *                              Mainly used to put emoji in already generated DOM
+	       *                              without compromising surrounding nodes and
+	       *                              **avoiding** the usage of `innerHTML`.
+	       *                              NOTE: Using DOM elements instead of strings should
+	       *                              improve security without compromising too much
+	       *                              performance compared with a less safe `innerHTML`.
+	       *
+	       * @param   Function|Object  [optional]
+	       *                              either the callback that will be invoked or an object
+	       *                              with all properties to use per each found emoji.
+	       *
+	       *          Function            if specified, this will be invoked per each emoji
+	       *                              that has been found through the RegExp except
+	       *                              those follwed by the invariant \uFE0E ("as text").
+	       *                              Once invoked, parameters will be:
+	       *
+	       *                                iconId:string     the lower case HEX code point
+	       *                                                  i.e. "1f4a9"
+	       *
+	       *                                options:Object    all info for this parsing operation
+	       *
+	       *                                variant:char      the optional \uFE0F ("as image")
+	       *                                                  variant, in case this info
+	       *                                                  is anyhow meaningful.
+	       *                                                  By default this is ignored.
+	       *
+	       *                              If such callback will return a falsy value instead
+	       *                              of a valid `src` to use for the image, nothing will
+	       *                              actually change for that specific emoji.
+	       *
+	       *
+	       *          Object              if specified, an object containing the following properties
+	       *
+	       *            callback   Function  the callback to invoke per each found emoji.
+	       *            base       string    the base url, by default twemoji.base
+	       *            ext        string    the image extension, by default twemoji.ext
+	       *            size       string    the assets size, by default twemoji.size
+	       *
+	       * @example
+	       *
+	       *  twemoji.parse("I \u2764\uFE0F emoji!");
+	       *  // I <img class="emoji" draggable="false" alt="❤️" src="/assets/2764.gif"/> emoji!
+	       *
+	       *
+	       *  twemoji.parse("I \u2764\uFE0F emoji!", function(iconId, options) {
+	       *    return '/assets/' + iconId + '.gif';
+	       *  });
+	       *  // I <img class="emoji" draggable="false" alt="❤️" src="/assets/2764.gif"/> emoji!
+	       *
+	       *
+	       * twemoji.parse("I \u2764\uFE0F emoji!", {
+	       *   size: 72,
+	       *   callback: function(iconId, options) {
+	       *     return '/assets/' + options.size + '/' + iconId + options.ext;
+	       *   }
+	       * });
+	       *  // I <img class="emoji" draggable="false" alt="❤️" src="/assets/72x72/2764.png"/> emoji!
+	       *
+	       */
+	      parse: parse,
+
+	      /**
+	       * Given a string, invokes the callback argument
+	       *  per each emoji found in such string.
+	       * This is the most raw version used by
+	       *  the .parse(string) method itself.
+	       *
+	       * @param   string    generic string to parse
+	       * @param   Function  a generic callback that will be
+	       *                    invoked to replace the content.
+	       *                    This calback wil receive standard
+	       *                    String.prototype.replace(str, callback)
+	       *                    arguments such:
+	       *  callback(
+	       *    rawText,  // the emoji match
+	       *  );
+	       *
+	       *                    and others commonly received via replace.
+	       */
+	      replace: replace,
+
+	      /**
+	       * Simplify string tests against emoji.
+	       *
+	       * @param   string  some text that might contain emoji
+	       * @return  boolean true if any emoji was found, false otherwise.
+	       *
+	       * @example
+	       *
+	       *  if (twemoji.test(someContent)) {
+	       *    console.log("emoji All The Things!");
+	       *  }
+	       */
+	      test: test
+	    },
+
+	    // used to escape HTML special chars in attributes
+	    escaper = {
+	      '&': '&amp;',
+	      '<': '&lt;',
+	      '>': '&gt;',
+	      "'": '&#39;',
+	      '"': '&quot;'
+	    },
+
+	    // RegExp based on emoji's official Unicode standards
+	    // http://www.unicode.org/Public/UNIDATA/EmojiSources.txt
+	    re = /(?:\ud83d\udc68\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c\udffb|\ud83d\udc68\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc]|\ud83d\udc68\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd]|\ud83d\udc68\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffc-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffd-\udfff]|\ud83d\udc69\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c\udffb|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb\udffc\udffe\udfff]|\ud83d\udc69\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb\udffc]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffd\udfff]|\ud83d\udc69\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffd]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc68\ud83c[\udffb-\udffe]|\ud83d\udc69\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83d\udc69\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udffb\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c\udffb|\ud83e\uddd1\ud83c\udffc\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb\udffc]|\ud83e\uddd1\ud83c\udffd\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udffd]|\ud83e\uddd1\ud83c\udffe\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udffe]|\ud83e\uddd1\ud83c\udfff\u200d\ud83e\udd1d\u200d\ud83e\uddd1\ud83c[\udffb-\udfff]|\ud83e\uddd1\u200d\ud83e\udd1d\u200d\ud83e\uddd1|\ud83d\udc6b\ud83c[\udffb-\udfff]|\ud83d\udc6c\ud83c[\udffb-\udfff]|\ud83d\udc6d\ud83c[\udffb-\udfff]|\ud83d[\udc6b-\udc6d])|(?:\ud83d[\udc68\udc69])(?:\ud83c[\udffb-\udfff])?\u200d(?:\u2695\ufe0f|\u2696\ufe0f|\u2708\ufe0f|\ud83c[\udf3e\udf73\udf93\udfa4\udfa8\udfeb\udfed]|\ud83d[\udcbb\udcbc\udd27\udd2c\ude80\ude92]|\ud83e[\uddaf-\uddb3\uddbc\uddbd])|(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75]|\u26f9)((?:\ud83c[\udffb-\udfff]|\ufe0f)\u200d[\u2640\u2642]\ufe0f)|(?:\ud83c[\udfc3\udfc4\udfca]|\ud83d[\udc6e\udc71\udc73\udc77\udc81\udc82\udc86\udc87\ude45-\ude47\ude4b\ude4d\ude4e\udea3\udeb4-\udeb6]|\ud83e[\udd26\udd35\udd37-\udd39\udd3d\udd3e\uddb8\uddb9\uddcd-\uddcf\uddd6-\udddd])(?:\ud83c[\udffb-\udfff])?\u200d[\u2640\u2642]\ufe0f|(?:\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d\udc68|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d\udc8b\u200d\ud83d[\udc68\udc69]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\u2764\ufe0f\u200d\ud83d\udc68|\ud83d\udc68\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc68\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\u2764\ufe0f\u200d\ud83d[\udc68\udc69]|\ud83d\udc69\u200d\ud83d\udc66\u200d\ud83d\udc66|\ud83d\udc69\u200d\ud83d\udc67\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83c\udff3\ufe0f\u200d\ud83c\udf08|\ud83c\udff4\u200d\u2620\ufe0f|\ud83d\udc15\u200d\ud83e\uddba|\ud83d\udc41\u200d\ud83d\udde8|\ud83d\udc68\u200d\ud83d[\udc66\udc67]|\ud83d\udc69\u200d\ud83d[\udc66\udc67]|\ud83d\udc6f\u200d\u2640\ufe0f|\ud83d\udc6f\u200d\u2642\ufe0f|\ud83e\udd3c\u200d\u2640\ufe0f|\ud83e\udd3c\u200d\u2642\ufe0f|\ud83e\uddde\u200d\u2640\ufe0f|\ud83e\uddde\u200d\u2642\ufe0f|\ud83e\udddf\u200d\u2640\ufe0f|\ud83e\udddf\u200d\u2642\ufe0f)|[#*0-9]\ufe0f?\u20e3|(?:[©®\u2122\u265f]\ufe0f)|(?:\ud83c[\udc04\udd70\udd71\udd7e\udd7f\ude02\ude1a\ude2f\ude37\udf21\udf24-\udf2c\udf36\udf7d\udf96\udf97\udf99-\udf9b\udf9e\udf9f\udfcd\udfce\udfd4-\udfdf\udff3\udff5\udff7]|\ud83d[\udc3f\udc41\udcfd\udd49\udd4a\udd6f\udd70\udd73\udd76-\udd79\udd87\udd8a-\udd8d\udda5\udda8\uddb1\uddb2\uddbc\uddc2-\uddc4\uddd1-\uddd3\udddc-\uddde\udde1\udde3\udde8\uddef\uddf3\uddfa\udecb\udecd-\udecf\udee0-\udee5\udee9\udef0\udef3]|[\u203c\u2049\u2139\u2194-\u2199\u21a9\u21aa\u231a\u231b\u2328\u23cf\u23ed-\u23ef\u23f1\u23f2\u23f8-\u23fa\u24c2\u25aa\u25ab\u25b6\u25c0\u25fb-\u25fe\u2600-\u2604\u260e\u2611\u2614\u2615\u2618\u2620\u2622\u2623\u2626\u262a\u262e\u262f\u2638-\u263a\u2640\u2642\u2648-\u2653\u2660\u2663\u2665\u2666\u2668\u267b\u267f\u2692-\u2697\u2699\u269b\u269c\u26a0\u26a1\u26aa\u26ab\u26b0\u26b1\u26bd\u26be\u26c4\u26c5\u26c8\u26cf\u26d1\u26d3\u26d4\u26e9\u26ea\u26f0-\u26f5\u26f8\u26fa\u26fd\u2702\u2708\u2709\u270f\u2712\u2714\u2716\u271d\u2721\u2733\u2734\u2744\u2747\u2757\u2763\u2764\u27a1\u2934\u2935\u2b05-\u2b07\u2b1b\u2b1c\u2b50\u2b55\u3030\u303d\u3297\u3299])(?:\ufe0f|(?!\ufe0e))|(?:(?:\ud83c[\udfcb\udfcc]|\ud83d[\udd74\udd75\udd90]|[\u261d\u26f7\u26f9\u270c\u270d])(?:\ufe0f|(?!\ufe0e))|(?:\ud83c[\udf85\udfc2-\udfc4\udfc7\udfca]|\ud83d[\udc42\udc43\udc46-\udc50\udc66-\udc69\udc6e\udc70-\udc78\udc7c\udc81-\udc83\udc85-\udc87\udcaa\udd7a\udd95\udd96\ude45-\ude47\ude4b-\ude4f\udea3\udeb4-\udeb6\udec0\udecc]|\ud83e[\udd0f\udd18-\udd1c\udd1e\udd1f\udd26\udd30-\udd39\udd3d\udd3e\uddb5\uddb6\uddb8\uddb9\uddbb\uddcd-\uddcf\uddd1-\udddd]|[\u270a\u270b]))(?:\ud83c[\udffb-\udfff])?|(?:\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc73\udb40\udc63\udb40\udc74\udb40\udc7f|\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc77\udb40\udc6c\udb40\udc73\udb40\udc7f|\ud83c\udde6\ud83c[\udde8-\uddec\uddee\uddf1\uddf2\uddf4\uddf6-\uddfa\uddfc\uddfd\uddff]|\ud83c\udde7\ud83c[\udde6\udde7\udde9-\uddef\uddf1-\uddf4\uddf6-\uddf9\uddfb\uddfc\uddfe\uddff]|\ud83c\udde8\ud83c[\udde6\udde8\udde9\uddeb-\uddee\uddf0-\uddf5\uddf7\uddfa-\uddff]|\ud83c\udde9\ud83c[\uddea\uddec\uddef\uddf0\uddf2\uddf4\uddff]|\ud83c\uddea\ud83c[\udde6\udde8\uddea\uddec\udded\uddf7-\uddfa]|\ud83c\uddeb\ud83c[\uddee-\uddf0\uddf2\uddf4\uddf7]|\ud83c\uddec\ud83c[\udde6\udde7\udde9-\uddee\uddf1-\uddf3\uddf5-\uddfa\uddfc\uddfe]|\ud83c\udded\ud83c[\uddf0\uddf2\uddf3\uddf7\uddf9\uddfa]|\ud83c\uddee\ud83c[\udde8-\uddea\uddf1-\uddf4\uddf6-\uddf9]|\ud83c\uddef\ud83c[\uddea\uddf2\uddf4\uddf5]|\ud83c\uddf0\ud83c[\uddea\uddec-\uddee\uddf2\uddf3\uddf5\uddf7\uddfc\uddfe\uddff]|\ud83c\uddf1\ud83c[\udde6-\udde8\uddee\uddf0\uddf7-\uddfb\uddfe]|\ud83c\uddf2\ud83c[\udde6\udde8-\udded\uddf0-\uddff]|\ud83c\uddf3\ud83c[\udde6\udde8\uddea-\uddec\uddee\uddf1\uddf4\uddf5\uddf7\uddfa\uddff]|\ud83c\uddf4\ud83c\uddf2|\ud83c\uddf5\ud83c[\udde6\uddea-\udded\uddf0-\uddf3\uddf7-\uddf9\uddfc\uddfe]|\ud83c\uddf6\ud83c\udde6|\ud83c\uddf7\ud83c[\uddea\uddf4\uddf8\uddfa\uddfc]|\ud83c\uddf8\ud83c[\udde6-\uddea\uddec-\uddf4\uddf7-\uddf9\uddfb\uddfd-\uddff]|\ud83c\uddf9\ud83c[\udde6\udde8\udde9\uddeb-\udded\uddef-\uddf4\uddf7\uddf9\uddfb\uddfc\uddff]|\ud83c\uddfa\ud83c[\udde6\uddec\uddf2\uddf3\uddf8\uddfe\uddff]|\ud83c\uddfb\ud83c[\udde6\udde8\uddea\uddec\uddee\uddf3\uddfa]|\ud83c\uddfc\ud83c[\uddeb\uddf8]|\ud83c\uddfd\ud83c\uddf0|\ud83c\uddfe\ud83c[\uddea\uddf9]|\ud83c\uddff\ud83c[\udde6\uddf2\uddfc]|\ud83c[\udccf\udd8e\udd91-\udd9a\udde6-\uddff\ude01\ude32-\ude36\ude38-\ude3a\ude50\ude51\udf00-\udf20\udf2d-\udf35\udf37-\udf7c\udf7e-\udf84\udf86-\udf93\udfa0-\udfc1\udfc5\udfc6\udfc8\udfc9\udfcf-\udfd3\udfe0-\udff0\udff4\udff8-\udfff]|\ud83d[\udc00-\udc3e\udc40\udc44\udc45\udc51-\udc65\udc6a-\udc6d\udc6f\udc79-\udc7b\udc7d-\udc80\udc84\udc88-\udca9\udcab-\udcfc\udcff-\udd3d\udd4b-\udd4e\udd50-\udd67\udda4\uddfb-\ude44\ude48-\ude4a\ude80-\udea2\udea4-\udeb3\udeb7-\udebf\udec1-\udec5\uded0-\uded2\uded5\udeeb\udeec\udef4-\udefa\udfe0-\udfeb]|\ud83e[\udd0d\udd0e\udd10-\udd17\udd1d\udd20-\udd25\udd27-\udd2f\udd3a\udd3c\udd3f-\udd45\udd47-\udd71\udd73-\udd76\udd7a-\udda2\udda5-\uddaa\uddae-\uddb4\uddb7\uddba\uddbc-\uddca\uddd0\uddde-\uddff\ude70-\ude73\ude78-\ude7a\ude80-\ude82\ude90-\ude95]|[\u23e9-\u23ec\u23f0\u23f3\u267e\u26ce\u2705\u2728\u274c\u274e\u2753-\u2755\u2795-\u2797\u27b0\u27bf\ue50a])|\ufe0f/g,
+
+	    // avoid runtime RegExp creation for not so smart,
+	    // not JIT based, and old browsers / engines
+	    UFE0Fg = /\uFE0F/g,
+
+	    // avoid using a string literal like '\u200D' here because minifiers expand it inline
+	    U200D = String.fromCharCode(0x200D),
+
+	    // used to find HTML special chars in attributes
+	    rescaper = /[&<>'"]/g,
+
+	    // nodes with type 1 which should **not** be parsed
+	    shouldntBeParsed = /^(?:iframe|noframes|noscript|script|select|style|textarea)$/,
+
+	    // just a private shortcut
+	    fromCharCode = String.fromCharCode;
+
+	  return twemoji;
+
+
+	  /////////////////////////
+	  //  private functions  //
+	  //     declaration     //
+	  /////////////////////////
+
+	  /**
+	   * Shortcut to create text nodes
+	   * @param   string  text used to create DOM text node
+	   * @return  Node  a DOM node with that text
+	   */
+	  function createText(text, clean) {
+	    return document.createTextNode(clean ? text.replace(UFE0Fg, '') : text);
+	  }
+
+	  /**
+	   * Utility function to escape html attribute text
+	   * @param   string  text use in HTML attribute
+	   * @return  string  text encoded to use in HTML attribute
+	   */
+	  function escapeHTML(s) {
+	    return s.replace(rescaper, replacer);
+	  }
+
+	  /**
+	   * Default callback used to generate emoji src
+	   *  based on Twitter CDN
+	   * @param   string    the emoji codepoint string
+	   * @param   string    the default size to use, i.e. "36x36"
+	   * @return  string    the image source to use
+	   */
+	  function defaultImageSrcGenerator(icon, options) {
+	    return ''.concat(options.base, options.size, '/', icon, options.ext);
+	  }
+
+	  /**
+	   * Given a generic DOM nodeType 1, walk through all children
+	   * and store every nodeType 3 (#text) found in the tree.
+	   * @param   Element a DOM Element with probably some text in it
+	   * @param   Array the list of previously discovered text nodes
+	   * @return  Array same list with new discovered nodes, if any
+	   */
+	  function grabAllTextNodes(node, allText) {
+	    var
+	      childNodes = node.childNodes,
+	      length = childNodes.length,
+	      subnode,
+	      nodeType;
+	    while (length--) {
+	      subnode = childNodes[length];
+	      nodeType = subnode.nodeType;
+	      // parse emoji only in text nodes
+	      if (nodeType === 3) {
+	        // collect them to process emoji later
+	        allText.push(subnode);
+	      }
+	      // ignore all nodes that are not type 1, that are svg, or that
+	      // should not be parsed as script, style, and others
+	      else if (nodeType === 1 && !('ownerSVGElement' in subnode) &&
+	          !shouldntBeParsed.test(subnode.nodeName.toLowerCase())) {
+	        grabAllTextNodes(subnode, allText);
+	      }
+	    }
+	    return allText;
+	  }
+
+	  /**
+	   * Used to both remove the possible variant
+	   *  and to convert utf16 into code points.
+	   *  If there is a zero-width-joiner (U+200D), leave the variants in.
+	   * @param   string    the raw text of the emoji match
+	   * @return  string    the code point
+	   */
+	  function grabTheRightIcon(rawText) {
+	    // if variant is present as \uFE0F
+	    return toCodePoint(rawText.indexOf(U200D) < 0 ?
+	      rawText.replace(UFE0Fg, '') :
+	      rawText
+	    );
+	  }
+
+	  /**
+	   * DOM version of the same logic / parser:
+	   *  emojify all found sub-text nodes placing images node instead.
+	   * @param   Element   generic DOM node with some text in some child node
+	   * @param   Object    options  containing info about how to parse
+	    *
+	    *            .callback   Function  the callback to invoke per each found emoji.
+	    *            .base       string    the base url, by default twemoji.base
+	    *            .ext        string    the image extension, by default twemoji.ext
+	    *            .size       string    the assets size, by default twemoji.size
+	    *
+	   * @return  Element same generic node with emoji in place, if any.
+	   */
+	  function parseNode(node, options) {
+	    var
+	      allText = grabAllTextNodes(node, []),
+	      length = allText.length,
+	      attrib,
+	      attrname,
+	      modified,
+	      fragment,
+	      subnode,
+	      text,
+	      match,
+	      i,
+	      index,
+	      img,
+	      rawText,
+	      iconId,
+	      src;
+	    while (length--) {
+	      modified = false;
+	      fragment = document.createDocumentFragment();
+	      subnode = allText[length];
+	      text = subnode.nodeValue;
+	      i = 0;
+	      while ((match = re.exec(text))) {
+	        index = match.index;
+	        if (index !== i) {
+	          fragment.appendChild(
+	            createText(text.slice(i, index), true)
+	          );
+	        }
+	        rawText = match[0];
+	        iconId = grabTheRightIcon(rawText);
+	        i = index + rawText.length;
+	        src = options.callback(iconId, options);
+	        if (iconId && src) {
+	          img = new Image();
+	          img.onerror = options.onerror;
+	          img.setAttribute('draggable', 'false');
+	          attrib = options.attributes(rawText, iconId);
+	          for (attrname in attrib) {
+	            if (
+	              attrib.hasOwnProperty(attrname) &&
+	              // don't allow any handlers to be set + don't allow overrides
+	              attrname.indexOf('on') !== 0 &&
+	              !img.hasAttribute(attrname)
+	            ) {
+	              img.setAttribute(attrname, attrib[attrname]);
+	            }
+	          }
+	          img.className = options.className;
+	          img.alt = rawText;
+	          img.src = src;
+	          modified = true;
+	          fragment.appendChild(img);
+	        }
+	        if (!img) fragment.appendChild(createText(rawText, false));
+	        img = null;
+	      }
+	      // is there actually anything to replace in here ?
+	      if (modified) {
+	        // any text left to be added ?
+	        if (i < text.length) {
+	          fragment.appendChild(
+	            createText(text.slice(i), true)
+	          );
+	        }
+	        // replace the text node only, leave intact
+	        // anything else surrounding such text
+	        subnode.parentNode.replaceChild(fragment, subnode);
+	      }
+	    }
+	    return node;
+	  }
+
+	  /**
+	   * String/HTML version of the same logic / parser:
+	   *  emojify a generic text placing images tags instead of surrogates pair.
+	   * @param   string    generic string with possibly some emoji in it
+	   * @param   Object    options  containing info about how to parse
+	   *
+	   *            .callback   Function  the callback to invoke per each found emoji.
+	   *            .base       string    the base url, by default twemoji.base
+	   *            .ext        string    the image extension, by default twemoji.ext
+	   *            .size       string    the assets size, by default twemoji.size
+	   *
+	   * @return  the string with <img tags> replacing all found and parsed emoji
+	   */
+	  function parseString(str, options) {
+	    return replace(str, function (rawText) {
+	      var
+	        ret = rawText,
+	        iconId = grabTheRightIcon(rawText),
+	        src = options.callback(iconId, options),
+	        attrib,
+	        attrname;
+	      if (iconId && src) {
+	        // recycle the match string replacing the emoji
+	        // with its image counter part
+	        ret = '<img '.concat(
+	          'class="', options.className, '" ',
+	          'draggable="false" ',
+	          // needs to preserve user original intent
+	          // when variants should be copied and pasted too
+	          'alt="',
+	          rawText,
+	          '"',
+	          ' src="',
+	          src,
+	          '"'
+	        );
+	        attrib = options.attributes(rawText, iconId);
+	        for (attrname in attrib) {
+	          if (
+	            attrib.hasOwnProperty(attrname) &&
+	            // don't allow any handlers to be set + don't allow overrides
+	            attrname.indexOf('on') !== 0 &&
+	            ret.indexOf(' ' + attrname + '=') === -1
+	          ) {
+	            ret = ret.concat(' ', attrname, '="', escapeHTML(attrib[attrname]), '"');
+	          }
+	        }
+	        ret = ret.concat('/>');
+	      }
+	      return ret;
+	    });
+	  }
+
+	  /**
+	   * Function used to actually replace HTML special chars
+	   * @param   string  HTML special char
+	   * @return  string  encoded HTML special char
+	   */
+	  function replacer(m) {
+	    return escaper[m];
+	  }
+
+	  /**
+	   * Default options.attribute callback
+	   * @return  null
+	   */
+	  function returnNull() {
+	    return null;
+	  }
+
+	  /**
+	   * Given a generic value, creates its squared counterpart if it's a number.
+	   *  As example, number 36 will return '36x36'.
+	   * @param   any     a generic value.
+	   * @return  any     a string representing asset size, i.e. "36x36"
+	   *                  only in case the value was a number.
+	   *                  Returns initial value otherwise.
+	   */
+	  function toSizeSquaredAsset(value) {
+	    return typeof value === 'number' ?
+	      value + 'x' + value :
+	      value;
+	  }
+
+
+	  /////////////////////////
+	  //  exported functions //
+	  //     declaration     //
+	  /////////////////////////
+
+	  function fromCodePoint(codepoint) {
+	    var code = typeof codepoint === 'string' ?
+	          parseInt(codepoint, 16) : codepoint;
+	    if (code < 0x10000) {
+	      return fromCharCode(code);
+	    }
+	    code -= 0x10000;
+	    return fromCharCode(
+	      0xD800 + (code >> 10),
+	      0xDC00 + (code & 0x3FF)
+	    );
+	  }
+
+	  function parse(what, how) {
+	    if (!how || typeof how === 'function') {
+	      how = {callback: how};
+	    }
+	    // if first argument is string, inject html <img> tags
+	    // otherwise use the DOM tree and parse text nodes only
+	    return (typeof what === 'string' ? parseString : parseNode)(what, {
+	      callback:   how.callback || defaultImageSrcGenerator,
+	      attributes: typeof how.attributes === 'function' ? how.attributes : returnNull,
+	      base:       typeof how.base === 'string' ? how.base : twemoji.base,
+	      ext:        how.ext || twemoji.ext,
+	      size:       how.folder || toSizeSquaredAsset(how.size || twemoji.size),
+	      className:  how.className || twemoji.className,
+	      onerror:    how.onerror || twemoji.onerror
+	    });
+	  }
+
+	  function replace(text, callback) {
+	    return String(text).replace(re, callback);
+	  }
+
+	  function test(text) {
+	    // IE6 needs a reset before too
+	    re.lastIndex = 0;
+	    var result = re.test(text);
+	    re.lastIndex = 0;
+	    return result;
+	  }
+
+	  function toCodePoint(unicodeSurrogates, sep) {
+	    var
+	      r = [],
+	      c = 0,
+	      p = 0,
+	      i = 0;
+	    while (i < unicodeSurrogates.length) {
+	      c = unicodeSurrogates.charCodeAt(i++);
+	      if (p) {
+	        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
+	        p = 0;
+	      } else if (0xD800 <= c && c <= 0xDBFF) {
+	        p = c;
+	      } else {
+	        r.push(c.toString(16));
+	      }
+	    }
+	    return r.join(sep || '-');
+	  }
+
+	}());
+	if (!location.protocol) {
+	  twemoji.base = twemoji.base.replace(/^http:/, "");
+	}
+	module.exports = twemoji;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ })
 /******/ ])

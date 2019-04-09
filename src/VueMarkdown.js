@@ -10,6 +10,7 @@ import mark from 'markdown-it-mark'
 import toc from 'markdown-it-toc-and-anchor'
 import katex from 'markdown-it-katex'
 import tasklists from 'markdown-it-task-lists'
+import twemoji from 'twemoji'
 
 export default {
   md: new markdownIt(),
@@ -179,6 +180,9 @@ export default {
       })
       return defaultLinkRenderer(tokens, idx, options, env, self)
     }
+    this.md.renderer.rules.emoji = function(token, idx) {
+      return twemoji.parse(token[idx].content);
+    };
 
     if (this.toc) {
       this.md.use(toc, {
